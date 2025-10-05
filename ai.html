@@ -1,0 +1,404 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tboy AI - Space Biology Assistant</title>
+    <link rel="stylesheet" href="style.css"/>
+    <link rel="stylesheet" href="ai.css"/>
+</head>
+<body data-theme="dark">
+    <!-- Navigation Bar -->
+    <nav class="navbar-not-hero">
+        <div class="nav-container">
+            <ul class="nav-links-left">
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="suggestions.html">Suggestions</a></li>
+            </ul>
+            
+            <div class="nav-logo">
+                <span class="logo-text" onclick="window.location.href='index.html'" style="cursor: pointer;">T-Boys</span>
+            </div>
+            
+            <ul class="nav-links-right">
+                <li><a href="library.html">Library</a></li>
+                <li><a href="ai.html">AI Chat</a></li>
+                <li>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <span class="sun-icon">☀️</span>
+                        <span class="moon-icon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+            
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- AI Chat Interface -->
+    <section class="chat-interface">
+        <div class="chat-container">
+            <!-- Chat History Sidebar -->
+            <aside class="chat-history" id="chatHistory">
+                <div class="chat-history-header">
+                    <h3>Conversations</h3>
+                    <button class="new-chat-btn" id="newChatBtn">
+                        <span class="btn-icon">+</span> New Chat
+                    </button>
+                </div>
+                <div class="chat-history-list" id="chatHistoryList">
+                    <!-- History items will be added here dynamically -->
+                </div>
+            </aside>
+
+            <!-- Main Chat Area -->
+            <div class="chat-main">
+                <div class="chat-header">
+                    <button class="chat-history-toggle" id="chatHistoryToggle">
+                        <span>☰</span>
+                    </button>
+                    <div class="chat-title-area">
+                        <h2>Tboy AI</h2>
+                        <p class="chat-subtitle">
+                            <span class="status-indicator">●</span> Online - Ask me about NASA's space biology research
+                        </p>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <!-- Welcome Message -->
+                    <div class="message ai-message">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">
+                                <p>Hello! I'm your Space Biology AI Assistant, powered by Mistral AI and connected to NASA's research database.</p>
+                                <p>I can help you explore topics like:</p>
+                                <ul>
+                                    <li>Microgravity effects on living organisms</li>
+                                    <li>Plant growth and cultivation in space</li>
+                                    <li>Astronaut health, physiology, and adaptation</li>
+                                    <li>Radiation protection and countermeasures</li>
+                                    <li>Space microbiology and biosecurity</li>
+                                </ul>
+                                <p>What would you like to explore today?</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-area">
+                    <div class="chat-input-container">
+                        <input
+                            type="text"
+                            id="chatInput"
+                            class="chat-input"
+                            placeholder="Ask about space biology research..."
+                            autocomplete="off"
+                        />
+                        <button class="send-btn" id="sendBtn" aria-label="Send message">
+                            <span class="send-icon">➤</span>
+                        </button>
+                    </div>
+                    <div class="chat-footer-info">
+                        <small>Powered by Mistral AI • Data from NASA Open Portal • Secured Backend</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme Toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            
+            body.setAttribute('data-theme', savedTheme);
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = body.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
+
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobileToggle');
+            const navLinksLeft = document.querySelector('.nav-links-left');
+            const navLinksRight = document.querySelector('.nav-links-right');
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', () => {
+                    navLinksLeft.classList.toggle('active');
+                    navLinksRight.classList.toggle('active');
+                });
+            }
+
+            // Chat history toggle for mobile
+            const chatHistoryToggle = document.getElementById('chatHistoryToggle');
+            const chatHistory = document.getElementById('chatHistory');
+
+            if (chatHistoryToggle) {
+                chatHistoryToggle.addEventListener('click', () => {
+                    chatHistory.classList.toggle('mobile-active');
+                });
+            }
+
+            // Chat functionality
+            const sendBtn = document.getElementById('sendBtn');
+            const chatInput = document.getElementById('chatInput');
+            const chatMessages = document.getElementById('chatMessages');
+            const chatHistoryList = document.getElementById('chatHistoryList');
+            
+            // Store conversation history for context
+            let conversationHistory = [];
+            let currentChatId = Date.now();
+
+            // Load chat history from localStorage
+            function loadChatHistory() {
+                const savedChats = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                chatHistoryList.innerHTML = '';
+                
+                savedChats.forEach((chat, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = `history-item ${index === 0 ? 'active' : ''}`;
+                    historyItem.innerHTML = `
+                        <div class="history-title">${chat.title}</div>
+                        <div class="history-date">${chat.date}</div>
+                    `;
+                    historyItem.addEventListener('click', () => {
+                        document.querySelectorAll('.history-item').forEach(i => i.classList.remove('active'));
+                        historyItem.classList.add('active');
+                        loadChat(chat.id);
+                    });
+                    chatHistoryList.appendChild(historyItem);
+                });
+            }
+
+            // Save current chat
+            function saveCurrentChat() {
+                const chats = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                const messages = Array.from(chatMessages.children);
+                
+                if (messages.length > 1) { // More than just welcome message
+                    const title = messages[1].textContent.substring(0, 50) + '...';
+                    const chat = {
+                        id: currentChatId,
+                        title: title,
+                        date: new Date().toLocaleString(),
+                        messages: conversationHistory,
+                        html: chatMessages.innerHTML
+                    };
+                    
+                    const existingIndex = chats.findIndex(c => c.id === currentChatId);
+                    if (existingIndex >= 0) {
+                        chats[existingIndex] = chat;
+                    } else {
+                        chats.unshift(chat);
+                    }
+                    
+                    localStorage.setItem('chatHistory', JSON.stringify(chats.slice(0, 20))); // Keep last 20 chats
+                    loadChatHistory();
+                }
+            }
+
+            function loadChat(chatId) {
+                const chats = JSON.parse(localStorage.getItem('chatHistory') || '[]');
+                const chat = chats.find(c => c.id === chatId);
+                if (chat) {
+                    chatMessages.innerHTML = chat.html;
+                    conversationHistory = chat.messages;
+                    currentChatId = chatId;
+                }
+            }
+
+            function addMessage(text, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${isUser ? 'user-message' : 'ai-message'}`;
+                
+                if (isUser) {
+                    messageDiv.innerHTML = `
+                        <div class="message-content">
+                            <div class="message-text">${escapeHtml(text)}</div>
+                        </div>
+                        <div class="message-avatar">👤</div>
+                    `;
+                } else {
+                    messageDiv.innerHTML = `
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-content">
+                            <div class="message-text">${formatMessage(text)}</div>
+                        </div>
+                    `;
+                }
+                
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function escapeHtml(text) {
+                const div = document.createElement('div');
+                div.textContent = text;
+                return div.innerHTML;
+            }
+
+            function formatMessage(text) {
+                // Simple markdown-like formatting
+                return escapeHtml(text)
+                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                    .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                    .replace(/\n/g, '<br>');
+            }
+
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'message ai-message typing-indicator';
+                typingDiv.id = 'typingIndicator';
+                typingDiv.innerHTML = `
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                `;
+                chatMessages.appendChild(typingDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typingIndicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+
+            async function sendMessage() {
+            const message = chatInput.value.trim();
+            if (!message) return;
+
+            // Disable input while processing
+            chatInput.disabled = true;
+            sendBtn.disabled = true;
+
+            // Add user message to UI and history
+            addMessage(message, true);
+            conversationHistory.push({ role: 'user', content: message });
+            
+            // Clear input
+            chatInput.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+
+            try {
+                // Call Mistral AI API directly (INSECURE - for demo only)
+                const response = await fetch('https://api.mistral.ai/v1/chat/completions', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer z1k1jXIv8wyEyPFbcogOlHhNoDo6uFxJ' // Will be replaced with the actual key
+                    },
+                    body: JSON.stringify({
+                        model: 'mistral-small-latest',
+                        messages: [
+                            {
+                                role: 'system',
+                                content: 'You are a helpful AI assistant specializing in space biology research. You help users understand NASA research on topics like microgravity effects, plant growth in space, astronaut health, and space microbiology. Provide concise, accurate, and engaging responses.'
+                            },
+                            ...conversationHistory
+                        ],
+                        temperature: 0.7,
+                        max_tokens: 800
+                    })
+                });
+
+                removeTypingIndicator();
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                
+                if (data.choices && data.choices[0]) {
+                    const aiResponse = data.choices[0].message.content;
+                    addMessage(aiResponse, false);
+                    conversationHistory.push({ role: 'assistant', content: aiResponse });
+                    saveCurrentChat();
+                } else {
+                    throw new Error('Invalid response format');
+                }
+
+            } catch (error) {
+                removeTypingIndicator();
+                console.error('Error:', error);
+                addMessage('Sorry, I encountered an error. Please try again.', false);
+            } finally {
+                // Re-enable input
+                chatInput.disabled = false;
+                sendBtn.disabled = false;
+                chatInput.focus();
+            }
+        }
+
+            // Event listeners
+            sendBtn.addEventListener('click', sendMessage);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    sendMessage();
+                }
+            });
+
+            // New chat button
+            const newChatBtn = document.getElementById('newChatBtn');
+            if (newChatBtn) {
+                newChatBtn.addEventListener('click', () => {
+                    if (conversationHistory.length > 0) {
+                        saveCurrentChat();
+                    }
+                    
+                    // Reset conversation
+                    conversationHistory = [];
+                    currentChatId = Date.now();
+                    
+                    // Reset UI
+                    chatMessages.innerHTML = `
+                        <div class="message ai-message">
+                            <div class="message-avatar">🤖</div>
+                            <div class="message-content">
+                                <div class="message-text">
+                                    <p>Hello! I'm your Space Biology AI Assistant, powered by Mistral AI and connected to NASA's research database.</p>
+                                    <p>I can help you explore topics like:</p>
+                                    <ul>
+                                        <li>Microgravity effects on living organisms</li>
+                                        <li>Plant growth and cultivation in space</li>
+                                        <li>Astronaut health, physiology, and adaptation</li>
+                                        <li>Radiation protection and countermeasures</li>
+                                        <li>Space microbiology and biosecurity</li>
+                                    </ul>
+                                    <p>What would you like to explore today?</p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+
+            // Load chat history on startup
+            loadChatHistory();
+        });
+    </script>
+</body>
+</html>

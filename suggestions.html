@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Suggestions - Space Biology Knowledge Engine</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="dark">
+    <!-- Navigation Bar -->
+    <nav class="navbar-not-hero">
+        <div class="nav-container">
+            <ul class="nav-links-left">
+                <li><a href="about.html">About Us</a></li>
+                <li><a href="suggestions.html">Submit Suggestion</a></li>
+            </ul>
+            
+            <div class="nav-logo">
+                <span class="logo-text" onclick="window.location.href='index.html'" style="cursor: pointer;">T-Boys</span>
+            </div>
+            
+            <ul class="nav-links-right">
+                <li><a href="library.html">Library</a></li>
+                <li><a href="ai.html">AI Chat</a></li>
+                <li>
+                    <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme">
+                        <span class="sun-icon">☀️</span>
+                        <span class="moon-icon">🌙</span>
+                    </button>
+                </li>
+            </ul>
+            
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main style="padding-top: 100px; min-height: 100vh;">
+        <div class="container">
+            <!-- Header Section -->
+            <section style="text-align: center; padding: 3rem 0;">
+                <h1 class="page-title">Submit Your Suggestions</h1>
+                <p class="page-subtitle">Help us improve and expand our platform</p>
+            </section>
+
+            <!-- Selection Buttons -->
+            <section style="max-width: 800px; margin: 0 auto; padding-bottom: 2rem;">
+                <div style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <button id="researchBtn" class="btn btn-primary" style="padding: 20px 40px; cursor: pointer; font-size: 1.1rem;">
+                        Add Research Paper
+                    </button>
+                    <button id="improvementBtn" class="btn btn-secondary" style="padding: 20px 40px; cursor: pointer; font-size: 1.1rem;">
+                        Suggest Website Improvement
+                    </button>
+                </div>
+            </section>
+
+            <!-- Research Form -->
+            <section id="researchForm" style="max-width: 800px; margin: 0 auto; padding-bottom: 4rem; display: none;">
+                <div class="article-card" style="padding: 2.5rem;">
+                    <h2 style="margin-bottom: 2rem; color: var(--accent-color); text-align: center;">Submit Research Paper</h2>
+                    <form id="researchSubmitForm">
+                        <!-- Research Title -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="researchTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Research Paper Title *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="researchTitle" 
+                                name="researchTitle"
+                                class="search-input" 
+                                placeholder="Enter the full title of the research paper"
+                                required
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Authors -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="authors" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Authors
+                            </label>
+                            <input 
+                                type="text" 
+                                id="authors" 
+                                name="authors"
+                                class="search-input" 
+                                placeholder="e.g., Smith, J., Johnson, K., et al."
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- URL/DOI -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="paperUrl" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                URL or DOI *
+                            </label>
+                            <input 
+                                type="url" 
+                                id="paperUrl" 
+                                name="paperUrl"
+                                class="search-input" 
+                                placeholder="https://... or DOI: 10.xxxx/xxxxx"
+                                required
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Category -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="category" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Research Category *
+                            </label>
+                            <select 
+                                id="category" 
+                                name="category"
+                                required
+                                style="width: 100%; padding: 15px 20px; border: 2px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-color); font-size: 1rem; font-family: inherit;"
+                            >
+                                <option value="">Select a category</option>
+                                <option value="microgravity">Microgravity Effects</option>
+                                <option value="plant-biology">Plant Biology</option>
+                                <option value="astronaut-health">Astronaut Health</option>
+                                <option value="radiation">Radiation Research</option>
+                                <option value="microbiology">Space Microbiology</option>
+                                <option value="dna-genetics">DNA & Genetics</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Description -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="researchDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Brief Description *
+                            </label>
+                            <textarea 
+                                id="researchDescription" 
+                                name="researchDescription"
+                                rows="5"
+                                placeholder="Summarize the key findings and relevance of this research..."
+                                required
+                                style="width: 100%; padding: 15px 20px; border: 2px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-color); font-size: 1rem; font-family: inherit; resize: vertical;"
+                            ></textarea>
+                        </div>
+
+                        <!-- Your Name -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="researchSubmitterName" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Your Name (Optional)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="researchSubmitterName" 
+                                name="submitterName"
+                                class="search-input" 
+                                placeholder="Your name"
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Your Email -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="researchSubmitterEmail" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Your Email (Optional)
+                            </label>
+                            <input 
+                                type="email" 
+                                id="researchSubmitterEmail" 
+                                name="submitterEmail"
+                                class="search-input" 
+                                placeholder="your.email@example.com"
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div style="text-align: center; margin-top: 2.5rem;">
+                            <button 
+                                type="submit" 
+                                class="search-button"
+                                style="padding: 16px 48px; cursor: pointer;"
+                            >
+                                Submit Research
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="researchSuccess" style="display: none; margin-top: 2rem; padding: 1.5rem; background-color: var(--success-color); color: white; border-radius: 8px; text-align: center;">
+                        Thank you! Your research suggestion has been submitted successfully.
+                    </div>
+                </div>
+            </section>
+
+            <!-- Improvement Form -->
+            <section id="improvementForm" style="max-width: 800px; margin: 0 auto; padding-bottom: 4rem; display: none;">
+                <div class="article-card" style="padding: 2.5rem;">
+                    <h2 style="margin-bottom: 2rem; color: var(--accent-color); text-align: center;">Suggest Website Improvement</h2>
+                    <form id="improvementSubmitForm">
+                        <!-- Improvement Type -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="improvementType" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Type of Improvement *
+                            </label>
+                            <select 
+                                id="improvementType" 
+                                name="improvementType"
+                                required
+                                style="width: 100%; padding: 15px 20px; border: 2px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-color); font-size: 1rem; font-family: inherit;"
+                            >
+                                <option value="">Select type</option>
+                                <option value="bug">Bug Report</option>
+                                <option value="feature">New Feature Request</option>
+                                <option value="ui-ux">UI/UX Improvement</option>
+                                <option value="performance">Performance Issue</option>
+                                <option value="content">Content Suggestion</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- Title -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="improvementTitle" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Title *
+                            </label>
+                            <input 
+                                type="text" 
+                                id="improvementTitle" 
+                                name="improvementTitle"
+                                class="search-input" 
+                                placeholder="Brief title of your suggestion"
+                                required
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Description -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="improvementDescription" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Detailed Description *
+                            </label>
+                            <textarea 
+                                id="improvementDescription" 
+                                name="improvementDescription"
+                                rows="6"
+                                placeholder="Please describe your suggestion in detail. If it's a bug, include steps to reproduce it..."
+                                required
+                                style="width: 100%; padding: 15px 20px; border: 2px solid var(--border-color); border-radius: 8px; background-color: var(--card-bg); color: var(--text-color); font-size: 1rem; font-family: inherit; resize: vertical;"
+                            ></textarea>
+                        </div>
+
+                        <!-- Page/Section -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="affectedPage" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Affected Page/Section
+                            </label>
+                            <input 
+                                type="text" 
+                                id="affectedPage" 
+                                name="affectedPage"
+                                class="search-input" 
+                                placeholder="e.g., Library page, AI Chat, Navigation"
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Your Name -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="improvementSubmitterName" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Your Name (Optional)
+                            </label>
+                            <input 
+                                type="text" 
+                                id="improvementSubmitterName" 
+                                name="submitterName"
+                                class="search-input" 
+                                placeholder="Your name"
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Your Email -->
+                        <div style="margin-bottom: 2rem;">
+                            <label for="improvementSubmitterEmail" style="display: block; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-color);">
+                                Your Email (Optional)
+                            </label>
+                            <input 
+                                type="email" 
+                                id="improvementSubmitterEmail" 
+                                name="submitterEmail"
+                                class="search-input" 
+                                placeholder="your.email@example.com"
+                                style="width: 100%; border-radius: 8px;"
+                            >
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div style="text-align: center; margin-top: 2.5rem;">
+                            <button 
+                                type="submit" 
+                                class="search-button"
+                                style="padding: 16px 48px; cursor: pointer;"
+                            >
+                                Submit Improvement
+                            </button>
+                        </div>
+                    </form>
+
+                    <!-- Success Message -->
+                    <div id="improvementSuccess" style="display: none; margin-top: 2rem; padding: 1.5rem; background-color: var(--success-color); color: white; border-radius: 8px; text-align: center;">
+                        Thank you! Your improvement suggestion has been submitted successfully.
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <br>
+                    <h3>T-Boys Knowledge Engine</h3>
+                    <p>Advancing space biology research<br> for the next-era of technology.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="library.html">Library</a></li>
+                        <li><a href="ai.html">AI Chat</a></li>
+                        <li><a href="about.html">About</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Resources</h4>
+                    <ul>
+                        <li><a href="https://science.nasa.gov/biological-physical/data/">NASA Open Data</a></li>
+                        <li><a href="library.html">Research Papers</a></li>
+                        <li><a href="suggestions.html">Suggestions</a></li>
+                        <li><a href="https://github.com/AnayDhawan">Contact Us</a></li>
+                        <li><a href="https://github.com/AnayDhawan">GitHub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Space Biology Knowledge Engine. Built for NASA Space Apps Challenge 2025.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Theme toggle
+            const themeToggle = document.getElementById('themeToggle');
+            const body = document.body;
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            
+            body.setAttribute('data-theme', savedTheme);
+
+            if (themeToggle) {
+                themeToggle.addEventListener('click', () => {
+                    const currentTheme = body.getAttribute('data-theme');
+                    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                    body.setAttribute('data-theme', newTheme);
+                    localStorage.setItem('theme', newTheme);
+                });
+            }
+
+            // Mobile menu toggle
+            const mobileToggle = document.getElementById('mobileToggle');
+            const navLinksLeft = document.querySelector('.nav-links-left');
+            const navLinksRight = document.querySelector('.nav-links-right');
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', () => {
+                    navLinksLeft.classList.toggle('active');
+                    navLinksRight.classList.toggle('active');
+                });
+            }
+
+            // Form toggle buttons
+            const researchBtn = document.getElementById('researchBtn');
+            const improvementBtn = document.getElementById('improvementBtn');
+            const researchForm = document.getElementById('researchForm');
+            const improvementForm = document.getElementById('improvementForm');
+
+            researchBtn.addEventListener('click', () => {
+                researchForm.style.display = 'block';
+                improvementForm.style.display = 'none';
+                researchBtn.classList.add('btn-primary');
+                researchBtn.classList.remove('btn-secondary');
+                improvementBtn.classList.add('btn-secondary');
+                improvementBtn.classList.remove('btn-primary');
+            });
+
+            improvementBtn.addEventListener('click', () => {
+                improvementForm.style.display = 'block';
+                researchForm.style.display = 'none';
+                improvementBtn.classList.add('btn-primary');
+                improvementBtn.classList.remove('btn-secondary');
+                researchBtn.classList.add('btn-secondary');
+                researchBtn.classList.remove('btn-primary');
+            });
+
+            // Research form submission
+            const researchSubmitForm = document.getElementById('researchSubmitForm');
+            const researchSuccess = document.getElementById('researchSuccess');
+
+            researchSubmitForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    type: 'research',
+                    title: document.getElementById('researchTitle').value,
+                    authors: document.getElementById('authors').value,
+                    url: document.getElementById('paperUrl').value,
+                    category: document.getElementById('category').value,
+                    description: document.getElementById('researchDescription').value,
+                    submitterName: document.getElementById('researchSubmitterName').value,
+                    submitterEmail: document.getElementById('researchSubmitterEmail').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                console.log('Research Submitted:', formData);
+
+                researchSuccess.style.display = 'block';
+                researchSubmitForm.reset();
+
+                setTimeout(() => {
+                    researchSuccess.style.display = 'none';
+                }, 5000);
+
+                researchSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            // Improvement form submission
+            const improvementSubmitForm = document.getElementById('improvementSubmitForm');
+            const improvementSuccess = document.getElementById('improvementSuccess');
+
+            improvementSubmitForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    type: 'improvement',
+                    improvementType: document.getElementById('improvementType').value,
+                    title: document.getElementById('improvementTitle').value,
+                    description: document.getElementById('improvementDescription').value,
+                    affectedPage: document.getElementById('affectedPage').value,
+                    submitterName: document.getElementById('improvementSubmitterName').value,
+                    submitterEmail: document.getElementById('improvementSubmitterEmail').value,
+                    timestamp: new Date().toISOString()
+                };
+
+                console.log('Improvement Submitted:', formData);
+
+                improvementSuccess.style.display = 'block';
+                improvementSubmitForm.reset();
+
+                setTimeout(() => {
+                    improvementSuccess.style.display = 'none';
+                }, 5000);
+
+                improvementSuccess.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+        });
+    </script>
+</body>
+</html>
